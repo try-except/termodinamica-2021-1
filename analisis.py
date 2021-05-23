@@ -90,15 +90,34 @@ plt.tick_params(
     labelleft=False    # labels along the left edge are off
 )
 vol = np.linspace(1, 4, 100) #rango de ploteo
-#primer grafico
-#n*T*R / v = P
+#primer grafico (n*T*R / v = P)
+#curvas
 curva1 = (data.at[2, 'moles'] * (data.at[2, 't1'] + 273)  * R) \
 / (vol**1.4 * 1000) #multiplicamos por 1000 para pasar a kPa
 curva2 = (data.at[2, 'moles'] * (data.at[2, 't2'] + 273) * R) \
-/ ((vol+1)**1.4 * 1000)
+/ ((vol+1)**1.4 * 1000) #para obligar a la curva a separarse, alteramos el volumen
 
+#puntos
+punto1x, punto1y = 2, (data.at[2, 'moles'] * (data.at[2, 't1'] + 273)  * R) \
+/ (2**1.4 * 1000)
+punto2x, punto2y = 3, (data.at[2, 'moles'] * (data.at[2, 't2'] + 273)  * R) \
+/ (4**1.4 * 1000)
 
+#ploteamos
 plt.plot(vol, curva1, 'r', label='$T_1$')
 plt.plot(vol, curva2, 'b', label='$T_2$')
+plt.plot(
+    [punto1x], [punto1y],
+    marker='o', markersize=5,
+    color="black",
+    zorder=3 #zorder controla que el punto esté sobre la curva y no detrás
+)
+plt.plot(
+    [punto2x], [punto2y],
+    marker='o', markersize=5,
+    color="black",
+    zorder=3 #zorder controla que el punto esté sobre la curva y no detrás
+)
+
 plt.legend(loc="upper right")
 plt.savefig(f"graf_inventado", dpi=300, bbox_inches='tight')
