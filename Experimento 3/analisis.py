@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # %% codecell
 #leemos el excel y lo pasamos a un DataFrame de pandas
 data = pd.read_excel(
-    'Set 1_exp3-1.xlsx',
+    'Experimento 3\Set 1_exp3-1.xlsx',
     header=1,
     index_col=1
 )
@@ -21,10 +21,11 @@ data.columns = data.columns.str.lower() #pasamos a minusculas
 data #vemos nuestro DataFrame
 
 # %%codecell
+#obtención de valores para cada repetición
 gammas, moles, ceves, cepes = list(), list(), list(), list()
 R = 8.314472 # joule / mol kelvin
-patm = 101325 #pascal
-vol = 0.01 #m3
+patm = 101325 # pascal
+vol = 0.01 # m3
 for index, row in data.iterrows():
     #gammas
     gam = row['h1'] / (row['h1'] - row['h2'])
@@ -48,59 +49,21 @@ data
 
 
 # %%codecell
-#calculo de gamma promedio
-gamma_prom = data['gamma'].mean()
-print(gamma_prom)
+#calculo de promedios
+data.loc[4] = [
+    None, None, None, None, # los promedios de h1, h2, t1 y t2 no nos interesan
+    data['gamma'].mean(), # promedio del indice adiabatico
+    data['moles'].mean(),  # promedio de moles
+    data['cv'].mean(),  # promedio de la capacidad calorífica a vol. constante
+    data['cp'].mean() # promedio de la capacidad calorífica a presión constante
+]
+as_list = data.index.tolist()
+idx = as_list.index(4)
+as_list[idx] = 'promedio'
+data.index = as_list
+
+data # visualizamos
 
 # %%codecell
-#grafico promedio
-plt.figure(figsize=(10, 7))
-plt.title('Gráfico $P/V$')
-plt.xlabel('Volumen ($m^3$)')
-plt.ylabel('Presión ($kPa$)')
-
-plt.tick_params(
-    axis='both',       # changes apply to the x-axis
-    which='both',      # both major and minor ticks are affected
-    bottom=False,      # ticks along the bottom edge are off
-    top=False,         # ticks along the top edge are off
-    labelbottom=False, # labels along the bottom edge are off
-    left=False,        # ticks along the left edge are off
-    right=False,       # ticks along the right edge are off
-    labelleft=False    # labels along the left edge are off
-)
-vol = np.linspace(0.001, 0.01, 100) #rango de ploteo
-
-moles = data['moles'].mean()
-t1 = data['t1'].mean() + 273
-t2 = data['t2'].mean() + 273
-gamma = data['gamma'].mean()
-#curvas
-curva1 = (moles * t1  * R) / (vol * 1000) #multiplicamos por 1000 para pasar a kPa
-curva2 = (moles * t2  * R) / ((vol + 0.001) * 1000) #multiplicamos por 1000 para pasar a kPa
-proceso = (patm * )
-
-#ploteamos
-plt.plot(vol, curva1, 'r', label='$T_1$')
-plt.plot(vol, curva2, 'b', label='$T_2$')
-plt.plot(vol, proceso, 'g')
-# plt.plot(vol, curva_proceso, 'g')
-# plt.plot(
-#     [punto1x], [punto1y],
-#     marker='o', markersize=5,
-#     color="black",
-#     zorder=3 #zorder controla que el punto esté sobre la curva y no detrás
-# )
-# plt.plot(
-#     [punto2x], [punto2y],
-#     marker='o', markersize=5,
-#     color="black",
-#     zorder=3 #zorder controla que el punto esté sobre la curva y no detrás
-# )
-
-plt.legend(loc="upper right")
-plt.savefig(f"graf_inventado", dpi=300, bbox_inches='tight')
-
-#%% codecell
-test = data.to_latex(decimal=',')
-print(test)
+# pasamos la tabla a LaTeX para incluirla en el documento
+print(data.to_latex(decimal=','))
