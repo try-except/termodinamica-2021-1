@@ -67,3 +67,30 @@ data # visualizamos
 # %%codecell
 # pasamos la tabla a LaTeX para incluirla en el documento
 print(data.to_latex(decimal=','))
+
+# =============================================================================
+# Análsis extra
+# %%codecell
+for i, row in data.iterrows():
+    if i not in [1, 2, 3]: continue
+    plt.figure(figsize=(10,10))
+    plt.title(f'Gráfico $P/V$ para la repeticion {i}')
+    plt.xlabel('Volumen ($m^3$)')
+    plt.ylabel('Presión ($kPa$)')
+
+    vol = np.linspace(0.001, 0.01, 100) #m3
+    #usamos la fórmula PV = nRT
+    #dividimos por 1000 para pasar a kPa
+    isoterma1 = data.at[i, 'moles'] * R * data.at[i, 't1'] / (vol * 1000)
+    isoterma2 = data.at[i, 'moles'] * R * data.at[i, 't2'] / (vol * 1000)
+
+    plt.plot(vol, isoterma1, 'r', label='$T_1$')
+    plt.plot(vol, isoterma2, 'b', label='$T_2$')
+
+    plt.legend(loc="upper right")
+    plt.savefig(f"Experimento 3/graf_{i}", dpi=300, bbox_inches='tight')
+
+'''
+Estos gráficos no son muy útiles, ya que la diferencia entre t1 y t2 es muy
+pequeña en las tres repeticiones.
+'''
