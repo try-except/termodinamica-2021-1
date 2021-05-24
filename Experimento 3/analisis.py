@@ -78,7 +78,7 @@ for i, row in data.iterrows():
     plt.xlabel('Volumen ($m^3$)')
     plt.ylabel('Presión ($kPa$)')
 
-    vol = np.linspace(0.001, 0.01, 100) #m3
+    vol = np.linspace(0.008, 0.01, 100) #m3
     #usamos la fórmula PV = nRT
     #dividimos por 1000 para pasar a kPa
     isoterma1 = data.at[i, 'moles'] * R * data.at[i, 't1'] / (vol * 1000)
