@@ -55,6 +55,7 @@ display(parametros)
 fig, ax = plt.subplots()
 iterator = data.iterrows()
 row = next(iterator)
+plt.title('Diagrama $Masa/Altura$ del experimento')
 plt.xlabel('Masa $(g)$')
 plt.ylabel('Altura $(mm)$')
 for _ in range(len(data) - 1):
@@ -63,6 +64,8 @@ for _ in range(len(data) - 1):
     row = next(iterator)
     h2, m2 = row[1]
     n2 = row[0]
+    coordsA = 'data'
+    coordsB = 'data'
     con = ConnectionPatch((m1, h1), (m2, h2), coordsA, coordsB,
                       arrowstyle="-|>", shrinkA=5, shrinkB=5,
                       mutation_scale=20, fc="w")
@@ -75,4 +78,50 @@ for _ in range(len(data) - 1):
     ax.add_artist(con)
 ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
+plt.savefig('graf_ma', dpi=300, bbox_inches='tight')
+plt.show()
+
+# %% codecell
+volumenes, presiones = list(), list()
+for index, row in data.iterrows():
+    #volumenes
+    radio = (parametros.at['valores', 'd_p'] / 1000) / 2
+    area_base = np.pi * radio**2
+    volumen = area_base * (data.at[index, 'h'] / 1000)
+    presion = ((data.at[index, 'masa'] / 1000) * 9.81) / area_base
+    presion += parametros.at['valores', 'p_atm']
+    volumenes.append(volumen)
+    presiones.append(presion)
+data.insert(2, 'V', volumenes) # m^3
+data.insert(3, 'P', presiones) #Pa
+data
+
+# %% codecell
+fig, ax = plt.subplots()
+iterator = data.iterrows()
+row = next(iterator)
+plt.title('Diagrama $P/V$ del experimento')
+plt.xlabel('Presion ($Pa$)')
+plt.ylabel('Volumen ($10^{-5}m^3$)')
+for _ in range(len(data) - 1):
+    v1, p1 = row[1][2:]
+    n1 = row[0]
+    row = next(iterator)
+    v2, p2 = row[1][2:]
+    n2 = row[0]
+    coordsA = 'data'
+    coordsB = 'data'
+    con = ConnectionPatch((p1, v1), (p2, v2), coordsA, coordsB,
+                      arrowstyle="-|>", shrinkA=5, shrinkB=5,
+                      mutation_scale=20, fc="w")
+    plt.plot([p1, p2], [v1, v2], 'bo')
+    ax.text(
+        p1 + 20, v1, n1[:1],
+        verticalalignment='bottom', horizontalalignment = 'left',
+        fontsize=12, fontweight = 'bold'#, fontfamily = 'serif'
+    )
+    ax.add_artist(con)
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+plt.savefig('graf_pv', dpi=300, bbox_inches = 'tight')
 plt.show()
