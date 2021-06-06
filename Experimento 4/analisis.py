@@ -2,6 +2,7 @@
 import pandas as pd
 from IPython.display import display
 import matplotlib.pyplot as plt
+from matplotlib.patches import ConnectionPatch
 import numpy as np
 
 # %% codecell
@@ -51,3 +52,27 @@ display(data)
 display(parametros)
 
 # %%codecell
+fig, ax = plt.subplots()
+iterator = data.iterrows()
+row = next(iterator)
+plt.xlabel('Masa $(g)$')
+plt.ylabel('Altura $(mm)$')
+for _ in range(len(data) - 1):
+    h1, m1 = row[1]
+    n1 = row[0]
+    row = next(iterator)
+    h2, m2 = row[1]
+    n2 = row[0]
+    con = ConnectionPatch((m1, h1), (m2, h2), coordsA, coordsB,
+                      arrowstyle="-|>", shrinkA=5, shrinkB=5,
+                      mutation_scale=20, fc="w")
+    ax.plot([m1, m2], [h1, h2], 'bo')
+    ax.text(
+        m1 + 1, h1 + 0.2, n1,
+        verticalalignment='bottom', horizontalalignment = 'left',
+        fontsize=12, fontweight = 'bold'#, fontfamily = 'serif'
+    )
+    ax.add_artist(con)
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+plt.show()
