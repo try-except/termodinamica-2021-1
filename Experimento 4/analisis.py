@@ -132,4 +132,7 @@ plt.show()
 base_trapecio = abs(data.at['D','V'] - data.at['A', 'V'])
 altura_trapecio = abs(data.at['B', 'P'] - data.at['A', 'P'])
 area_trapecio = base_trapecio * altura_trapecio
-print(area_trapecio)
+print(area_trapecio, 'J')
+
+#%% codecell
+print(data.to_latex())
