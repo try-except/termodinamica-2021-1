@@ -31,11 +31,28 @@ data.columns = nuevas_col
 data
 
 # %%codecell
-for key in ['potencia', 'voltaje', 'corriente', 'temp', 'temp_h']:
+keys = ['potencia', 'voltaje', 'corriente', 'temp', 'temp_h']
+key_titles = {
+    'potencia' : 'Potencia',
+    'voltaje' : 'Voltaje',
+    'corriente' : 'Corriente',
+    'temp' : 'Temperatura 1',
+    'temp_h' : 'Temperatura 2'
+}
+key_units = {
+    'potencia' : 'W',
+    'voltaje' : 'V',
+    'corriente' : 'A',
+    'temp' : '°C',
+    'temp_h' : '°C'
+}
+
+for key in keys:
     fig, ax = plt.subplots()
     plt.title(f'{key_titles[key]} vs Tiempo')
     plt.ylabel(f'{key_titles[key]} (${key_units[key]}$)')
     plt.xlabel('Tiempo ($s$)')
     ax.plot(data.index, data[key], 'bo-')
 
+    plt.savefig(f'{key}_tiempo', dpi=300, bbox_inches = 'tight')
     plt.show()
