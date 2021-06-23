@@ -96,6 +96,7 @@ for index, row in data.iterrows():
     if index < 86.05: trabajo_t = 0
     trabajo_maquina.append(trabajo_t)
 data.insert(len(data.columns), 'w_maq', trabajo_maquina)
-
+print(data.at[218.8, 'w_maq'])
+print(9.050000000000011 / 90.78600446949991)
+print(1 - data.at[218.8, 'q_cold'] / data.at[218.8, 'q_hot'])
 #%%codecell
-data.iloc[:,[4,8,10]][210:211]
