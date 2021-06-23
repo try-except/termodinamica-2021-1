@@ -56,3 +56,46 @@ for key in keys:
 
     plt.savefig(f'{key}_tiempo', dpi=300, bbox_inches = 'tight')
     plt.show()
+
+#%%codecell
+#punto de cambio de modo
+punto_de_cambio = data.loc[50:]['potencia'].idxmin()
+print(punto_de_cambio)
+
+
+#%%codecell
+#calculo de trabajo (heat pump)
+trabajo = 0
+for index, row in data.iterrows():
+    trabajo += 0.05 * row['potencia']
+    if index == 86: break
+
+print(trabajo)
+
+#%%codecell
+#calculo de calor (heat pump)
+e_lost = list()
+potencia_acumulada = 0
+for index, row in data.iterrows():
+    potencia_acumulada += row['potencia']
+    calor_perdido = row['q_hot_p'] - (row['q_cold_p'] + 0.05 * potencia_acumulada)
+    e_lost.append(calor_perdido)
+
+data.insert(len(data.columns), 'e_lost', e_lost)
+print(data.at[86, 'q_hot_p'])
+print(data.at[86, 'q_cold_p'] + trabajo)
+print(data.at[86, 'e_lost'])
+print(data.at[86, 'q_cold_p'] + trabajo + data.at[86, 'e_lost'])
+data
+
+#%%codecell
+#calculo de trabajo (maquina termica)
+trabajo_maquina = list()
+for index, row in data.iterrows():
+    trabajo_t = row['q_hot'] - row['q_cold']
+    if index < 86.05: trabajo_t = 0
+    trabajo_maquina.append(trabajo_t)
+data.insert(len(data.columns), 'w_maq', trabajo_maquina)
+
+#%%codecell
+data.iloc[:,[4,8,10]][210:211]
